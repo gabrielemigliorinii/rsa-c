@@ -96,25 +96,20 @@ Rsa::Rsa(){
 	this->d = generate_d();
 }
 
-void Rsa::crypt(string msg, int* encr){
+void Rsa::crypt(string msg, int encrypted[]){
 		
-	int a[msg.length()];
+	int array_msg_plain[msg.length()];
 	
 	for (int i=0; i<msg.length(); i++)
-		a[i] = (int)msg[i];
-		
-	for (int i=0; i<msg.length(); i++)
-		cout << a[i] << "\n";
+		array_msg_plain[i] = (int)msg[i];
 	
-	int enc[msg.length()];
-	
-	cout << "\n";
+	int t_enc[msg.length()];
 	
 	for (int i=0; i<msg.length(); i++)
-		enc[i] = MATH::modularExp(a[i], e, n);
+		t_enc[i] = MATH::modularExp(array_msg_plain[i], e, n);
 		
 	for (int i=0; i<msg.length(); i++)
-		encr[i] = enc[i];
+		encrypted[i] = t_enc[i];
 }
 
 int Rsa::decrypt(int crypted){
