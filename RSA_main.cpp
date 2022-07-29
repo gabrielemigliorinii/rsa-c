@@ -10,8 +10,8 @@ typedef long long Long;
 
 class RSA {
 	
-	// Chiave pubblica (n,e)
-	// Chiave privata (p,q,d)
+	// public (e)
+	// private (d)
 	
 	private:
 		
