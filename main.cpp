@@ -1,10 +1,5 @@
 
-#include <iostream>
-#include <math.h>
-#include <cstdlib>
 #include <ctime>
-#include <sstream>
-
 #include "rsa.h"
 
 using namespace std;

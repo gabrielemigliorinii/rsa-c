@@ -1,16 +1,9 @@
 
 #include <iostream>
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
 #include <sstream>
-
+//------------------------
 #include "m4th.h"
 #include "algorithm.h"
-
-using namespace std;
-
-typedef long long Long;
 
 class RSA {
 	
@@ -28,11 +21,11 @@ class RSA {
 	public:
 		
 		RSA();
-		string encrypt(string, int[]);
-		string decrypt(int[], int);
+		std::string encrypt(std::string, int[]);
+		std::string decrypt(int[], int);
 		void show_pars();
-		string get_pbc_key();
-		string get_prv_key();
+		std::string get_pbc_key();
+		std::string get_prv_key();
 };
 
 
@@ -59,7 +52,7 @@ RSA::RSA(){
 	this->d = gen_d();
 }
 
-string RSA::encrypt(string msg, int encrypted[]){
+std::string RSA::encrypt(std::string msg, int encrypted[]){
 		
 	int array_msg_plain[msg.length()];
 	
@@ -71,12 +64,12 @@ string RSA::encrypt(string msg, int encrypted[]){
 	for (int i=0; i<msg.length(); i++)
 		t_enc[i] = MATH::modularExp(array_msg_plain[i], e, n);
 		
-	string str_enc = "";
+	std::string str_enc = "";
 		
 	for (int i=0; i<msg.length(); i++)
 	{
 		encrypted[i] = t_enc[i];
-		ostringstream temp;
+		std::ostringstream temp;
     	temp << encrypted[i];
     	str_enc += temp.str();
     	if (i != msg.length() - 1) str_enc += "-";
@@ -87,11 +80,11 @@ string RSA::encrypt(string msg, int encrypted[]){
 }
 
 
-string RSA::decrypt(int crypted[], int size){
+std::string RSA::decrypt(int crypted[], int size){
 
 	int decrypted_message[size];
 	
-	string decrypted = "";
+	std::string decrypted = "";
 	
 	for (int i=0; i<size; i++)
 	{
@@ -104,16 +97,16 @@ string RSA::decrypt(int crypted[], int size){
 
 void RSA::show_pars(){
 	
-	cout << "\n\n";
-	cout << " -- PARAMETRI PER RSA --\n\n --------------------------------------------------- \n\n";
-	cout << "  p: "<<this->p<<endl;
-	cout << "  q: "<<this->q<<endl; 
-	cout << "  b: "<<this->b<<"    (p-1) * (q-1)\n"; 
-	cout << "  n: "<<this->n<<"    (p)   * (q)  \n"; 
-	cout << "  e: "<<this->e<<endl; 
-	cout << "  d: "<<this->d<<endl;
-	cout << "\n --------------------------------------------------- ";  
-	cout << "\n\n";
+	std::cout << "\n\n";
+	std::cout << " -- PARAMETRI PER RSA --\n\n --------------------------------------------------- \n\n";
+	std::cout << "  p: "<<this->p<<std::endl;
+	std::cout << "  q: "<<this->q<<std::endl; 
+	std::cout << "  b: "<<this->b<<"    (p-1) * (q-1)\n"; 
+	std::cout << "  n: "<<this->n<<"    (p)   * (q)  \n"; 
+	std::cout << "  e: "<<this->e<<std::endl; 
+	std::cout << "  d: "<<this->d<<std::endl;
+	std::cout << "\n --------------------------------------------------- ";  
+	std::cout << "\n\n";
 }
 
 Long RSA::gen_d(Long max) {
@@ -131,21 +124,21 @@ int RSA::gen_e(int max) {
 	return -1;
 }
 
-string RSA::get_pbc_key()
+std::string RSA::get_pbc_key()
 {
-	ostringstream temp;
+	std::ostringstream temp;
     temp << e;
-    string es = temp.str();
-	string b64 = b64encode(es);
+    std::string es = temp.str();
+	std::string b64 = b64encode(es);
 	return b64;
 }
 
-string RSA::get_prv_key()
+std::string RSA::get_prv_key()
 {	
-	ostringstream temp;
+	std::ostringstream temp;
     temp << d;
-    string ds = temp.str();
-	string b64 = b64encode(ds);
+    std::string ds = temp.str();
+	std::string b64 = b64encode(ds);
 	return b64;
 }
 
