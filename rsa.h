@@ -1,31 +1,36 @@
 
 #include <iostream>
 #include <sstream>
+
 //------------------------
+
 #include "m4th.h"
 #include "algorithm.h"
 
 class RSA {
 	
-	// Chiave pubblica (n,e)
-	// Chiave privata (p,q,d)
+	// public (e)
+	// private (d)
 	
 	private:
 		
 		int p, q, e;    
 		Long b, n, d;
 		
-		Long gen_d(Long max=999999999);  				// genera d avendo e, ed b = (p-1)*(q-1)
-		int gen_e(int max=99999);						// genera e avendo b = (p-1)*(q-1)
+		Long gen_d(Long max=999999999);  				// gen d having e, and b = (p-1)*(q-1)
+		int gen_e(int max=99999);						// gen e having b = (p-1)*(q-1)
 	
 	public:
 		
 		RSA();
-		std::string encrypt(std::string, int[]);
-		std::string decrypt(int[], int);
+		std::string encrypt(std::string, int[], bool=1);
+		std::string decrypt(int[], int, bool=1);
 		void show_pars();
 		std::string get_pbc_key();
 		std::string get_prv_key();
+		
+		// encrypt with public key and decrypt with private key => encrypt(string, int, bool=1), decrypt(int[], int, bool=1);
+		// encrypt with private key and decrypt with public key => encrypt(string, int, bool=0), decrypt(int[], int, bool=0);
 };
 
 
@@ -52,7 +57,7 @@ RSA::RSA(){
 	this->d = gen_d();
 }
 
-std::string RSA::encrypt(std::string msg, int encrypted[]){
+std::string RSA::encrypt(std::string msg, int encrypted[], bool pbc_key){
 		
 	int array_msg_plain[msg.length()];
 	
@@ -61,8 +66,10 @@ std::string RSA::encrypt(std::string msg, int encrypted[]){
 	
 	int t_enc[msg.length()];
 	
+	auto encryption_key = pbc_key ? e : d;
+	
 	for (int i=0; i<msg.length(); i++)
-		t_enc[i] = MATH::modularExp(array_msg_plain[i], e, n);
+		t_enc[i] = MATH::modularExp(array_msg_plain[i], encryption_key, n);
 		
 	std::string str_enc = "";
 		
@@ -80,15 +87,17 @@ std::string RSA::encrypt(std::string msg, int encrypted[]){
 }
 
 
-std::string RSA::decrypt(int crypted[], int size){
+std::string RSA::decrypt(int crypted[], int size, bool prv_key){
 
 	int decrypted_message[size];
 	
 	std::string decrypted = "";
 	
+	auto decryption_key = prv_key ? d : e;
+	
 	for (int i=0; i<size; i++)
 	{
-		decrypted_message[i] = MATH::modularExp(crypted[i], d, n);
+		decrypted_message[i] = MATH::modularExp(crypted[i], decryption_key, n);
 		decrypted += (char)decrypted_message[i];
 	}
 	

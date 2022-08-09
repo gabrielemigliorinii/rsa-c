@@ -19,11 +19,11 @@ int main (void) {
 	
 	int cipher_array[plain.length()];
 	
-	string cipher_string = rsa.encrypt(plain, cipher_array);
+	string cipher_string = rsa.encrypt(plain, cipher_array, false);
 	
 	cout << " >> CIPHERTEXT: " << cipher_string << "\n\n";
 	
-	cout << " >> PLAINTEXT: " << rsa.decrypt(cipher_array, *(&cipher_array+1)-cipher_array);
+	cout << " >> PLAINTEXT: " << rsa.decrypt(cipher_array, *(&cipher_array+1)-cipher_array, false);
 	
 	cout << "\n\n";
 	
