@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include <sstream>
 
 //------------------------
@@ -22,19 +21,39 @@ class RSA {
 	
 	public:
 		
-		RSA();
-		std::string encrypt(std::string, int[], bool=1);
-		std::string decrypt(int[], int, bool=1);
+		RSA(bool=1);
+		
+		std::string encrypt(std::string, bool=1);
+							
+		// int[] = (a-b-c-d), int = array size
+		std::string decrypt(int[], int, bool=1); // deprecated
+		std::string decrypt(std::string, bool=1);
+		
 		void show_pars();
+		
 		std::string get_pbc_key();
 		std::string get_prv_key();
+		
+		void set_d(Long);
+		void set_n(Long);
+		void set_e(int);
 		
 		// encrypt with public key and decrypt with private key => encrypt(string, int, bool=1), decrypt(int[], int, bool=1);
 		// encrypt with private key and decrypt with public key => encrypt(string, int, bool=0), decrypt(int[], int, bool=0);
 };
 
-
-RSA::RSA(){
+RSA::RSA(bool gen){
+	
+	if (gen == 0)
+	{
+		this->p = -1;
+		this->q = -1;
+		this->b = -1;
+		this->n = -1;
+		this->e = -1;
+		this->d = -1;
+		return;
+	}
 	
 	this->p = MATH::generate_prime(5,100);
 	
@@ -57,38 +76,51 @@ RSA::RSA(){
 	this->d = gen_d();
 }
 
-std::string RSA::encrypt(std::string msg, int encrypted[], bool pbc_key){
+void RSA::set_d(Long d){
+	if (d > 0)
+		this->d = d;
+}
+
+void RSA::set_n(Long n){
+	if (n > 0)
+		this->n = n;
+}
+
+void RSA::set_e(int e){
+	if (e > 0)
+		this->e = e;
+}
+
+std::string RSA::encrypt(std::string plain, bool pbc_key){
 		
-	int array_msg_plain[msg.length()];
+	int array_msg_plain[plain.length()];
 	
-	for (int i=0; i<msg.length(); i++)
-		array_msg_plain[i] = (int)msg[i];
+	for (int i=0; i<plain.length(); i++)
+		array_msg_plain[i] = (int)plain[i];
 	
-	int t_enc[msg.length()];
+	int enc[plain.length()];
 	
-	auto encryption_key = pbc_key ? e : d;
+	auto encryption_key = pbc_key ? this->e : this->d;
 	
-	for (int i=0; i<msg.length(); i++)
-		t_enc[i] = MATH::modularExp(array_msg_plain[i], encryption_key, n);
+	for (int i=0; i<plain.length(); i++)
+		enc[i] = MATH::modularExp(array_msg_plain[i], encryption_key, this->n);
 		
 	std::string str_enc = "";
 		
-	for (int i=0; i<msg.length(); i++)
+	for (int i=0; i<plain.length(); i++)
 	{
-		encrypted[i] = t_enc[i];
 		std::ostringstream temp;
-    	temp << encrypted[i];
+    	temp << enc[i];
     	str_enc += temp.str();
-    	if (i != msg.length() - 1) str_enc += "-";
-    	
+    	if (i != plain.length() - 1) str_enc += "-";
 	}
 
-	return str_enc;
+	return b64encode(str_enc);
 }
 
-
+// input int array required (example) => 8000-8001-8002
 std::string RSA::decrypt(int crypted[], int size, bool prv_key){
-
+	
 	int decrypted_message[size];
 	
 	std::string decrypted = "";
@@ -102,6 +134,28 @@ std::string RSA::decrypt(int crypted[], int size, bool prv_key){
 	}
 	
 	return decrypted;
+}
+
+// input string required (example) => "XJhu23xjnwx23=="
+std::string RSA::decrypt(std::string crypted, bool prv_key){
+	
+	std::string decoded_str = b64decode(crypted);
+	
+	std::vector<std::string> str_array = split(decoded_str);
+	
+	int int_array[str_array.size()];
+	
+	std::string plain = "";
+	
+	auto decryption_key = prv_key ? d : e;
+	
+	for (int i=0; i<str_array.size(); i++)
+	{
+		int_array[i] = std::stoi(str_array[i]);
+		plain += (char)MATH::modularExp(int_array[i], decryption_key, n);
+	}
+	
+	return plain;
 }
 
 void RSA::show_pars(){
@@ -120,7 +174,9 @@ void RSA::show_pars(){
 
 Long RSA::gen_d(Long max) {
 	
-	for (int d=0; d<max; d++) if ((d * e) % b == 1) return d;
+	for (int d=0; d<max; d++) 
+		if ((d * e) % b == 1) 
+			return d;
 	return -1;
 }
 
@@ -128,7 +184,11 @@ int RSA::gen_e(int max) {
 	
 	int e = 2;
 	
-	while (e < max) if (MATH::MCD(e, b) == 1) return e; else e++;
+	while (e < max) 
+		if (MATH::MCD(e, b) == 1) 
+			return e; 
+		else 
+			e++;
 	
 	return -1;
 }

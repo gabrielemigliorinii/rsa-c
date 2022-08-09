@@ -93,15 +93,9 @@ Long MATH::MCD(Long a, Long b) {
 int MATH::modularExp(int a, int b, int c){
 	
 	int r = 1;
-	int iter = 0;
 	
-	while (true) {
-		
-		r = (r*a) % c;
-		
-		iter++;
-		if (iter < b) continue; else break;
-	}
+	for (int iter = 0; iter < b; iter++)
+		r = (r*a) % c;	
 	
 	return r;
 }

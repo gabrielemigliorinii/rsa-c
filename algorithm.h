@@ -1,4 +1,23 @@
 
+#include <iostream>
+#include <vector>
+#include <string.h>
+
+const std::vector<std::string> split(std::string str){
+	
+	char* array_str = new char[str.length()+1];
+	strcpy(array_str, str.c_str());
+	
+    char *token = strtok(array_str, "-");
+    std::vector<std::string> splitted;
+    while (token != NULL)
+    {
+    	splitted.push_back(token);
+        token = strtok(NULL, "-");
+    }
+    
+    return splitted;
+}
 
 static const char* B64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

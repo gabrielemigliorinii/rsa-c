@@ -5,25 +5,20 @@
 using namespace std;
 
 int main (void) {
-
+	
 	srand(time(NULL));
 	
-	RSA rsa;
-	
+	RSA rsa(1);
 	string plain;
 	
-	cout << "\n >> INPUT PLAINTEXT: ";
+	cout << "\n\n >> INPUT PLAINTEXT: ";
 	getline(cin, plain);
-		
-	cout << "\n";
 	
-	int cipher_array[plain.length()];
+	string cipher_str = rsa.encrypt(plain, 0);
 	
-	string cipher_string = rsa.encrypt(plain, cipher_array, false);
+	cout << "\n >> CIPHERTEXT: " << cipher_str;
 	
-	cout << " >> CIPHERTEXT: " << cipher_string << "\n\n";
-	
-	cout << " >> PLAINTEXT: " << rsa.decrypt(cipher_array, *(&cipher_array+1)-cipher_array, false);
+	cout << "\n\n >> PLAINTEXT: " << rsa.decrypt(cipher_str, 0);
 	
 	cout << "\n\n";
 	
