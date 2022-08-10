@@ -15,11 +15,11 @@ int main (void) {
 	cout << "\n\n >> INPUT PLAINTEXT: ";
 	getline(cin, plain);
 	
-	string cipher_str = rsa.encrypt(plain);
+	string cipher = rsa.encrypt(plain);
 	
-	cout << "\n >> CIPHERTEXT: " << cipher_str;
+	cout << "\n >> CIPHERTEXT: " << cipher;
 	
-	cout << "\n\n >> PLAINTEXT: " << rsa.decrypt(cipher_str);
+	cout << "\n\n >> PLAINTEXT: " << rsa.decrypt(cipher);
 	
 	cout << "\n\n";
 	
