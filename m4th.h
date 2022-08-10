@@ -2,19 +2,19 @@
 #include <math.h>
 #include <cstdlib>
 
-typedef long long Long;
+typedef long long int Integer;
 
 class MATH {
 	
 	public:
 		
-		static bool is_prime(int x);
-		static int generate_prime(int min, int max);
-		static Long MCD(Long, Long);
-		static int modularExp(int, int, int);
+		static bool is_prime(Integer x);
+		static Integer generate_prime(Integer min, Integer max);
+		static Integer MCD(Integer, Integer);
+		static Integer modularExp(Integer, Integer, Integer);
 };
 
-bool MATH::is_prime(int x){
+bool MATH::is_prime(Integer x){
 			
 	x = abs(x);
 
@@ -22,7 +22,7 @@ bool MATH::is_prime(int x){
 	
 	else {
 		
-		const int X = x;
+		const Integer X = x;
 		
 		while (x-- > 2) 
 			if (X % x == 0) return 0;
@@ -31,16 +31,16 @@ bool MATH::is_prime(int x){
 	}
 }
 		
-int MATH::generate_prime(int min, int max){
+Integer MATH::generate_prime(Integer min, Integer max){
 			
 	if (min < 0 || max < 0 || min > max || (min == max && !is_prime(max))) return -1;
 	if (min < 2) min = 2;
 	
-	unsigned const int rd = rand() % (max-min) + (min);
+	unsigned const long long int rd = rand() % (max-min) + (min);
 	
 	if (is_prime(rd)) return rd;
 	
-	unsigned int t = rd+1;
+	unsigned long long int t = rd+1;
 	
 	while (t <= max){
 		
@@ -64,7 +64,7 @@ int MATH::generate_prime(int min, int max){
 	return -1;
 }
 
-Long MATH::MCD(Long a, Long b) {
+Integer MATH::MCD(Integer a, Integer b) {
  
     a = abs(a);
     b = abs(b);
@@ -74,9 +74,9 @@ Long MATH::MCD(Long a, Long b) {
     if (a == 0) return b;
     if (b == 0) return a;
 
-    if (a < b) { Long t = a; a = b; b = t; } // se a < b scambia a con b
+    if (a < b) { Integer t = a; a = b; b = t; } // se a < b scambia a con b
 
-    Long temp_a, temp_b;
+    Integer temp_a, temp_b;
 
     while (b != 0) {
 
@@ -90,11 +90,11 @@ Long MATH::MCD(Long a, Long b) {
     return a;
 }
 
-int MATH::modularExp(int a, int b, int c){
+Integer MATH::modularExp(Integer a, Integer b, Integer c){
 	
-	int r = 1;
+	Integer r = 1;
 	
-	for (int iter = 0; iter < b; iter++)
+	for (Integer iter = 0; iter < b; iter++)
 		r = (r*a) % c;	
 	
 	return r;

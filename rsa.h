@@ -13,11 +13,11 @@ class RSA {
 	
 	private:
 		
-		int p, q, e;    
-		Long b, n, d;
+		Integer p, q, e;    
+		Integer b, n, d;
 		
-		Long gen_d(Long max=999999999);  				// gen d having e, and b = (p-1)*(q-1)
-		int gen_e(int max=99999);						// gen e having b = (p-1)*(q-1)
+		Integer gen_d(Integer max=999999999);  				// gen d having e, and b = (p-1)*(q-1)
+		Integer gen_e(Integer max=99999);						// gen e having b = (p-1)*(q-1)
 	
 	public:
 		
@@ -26,7 +26,7 @@ class RSA {
 		std::string encrypt(std::string, bool=1);
 							
 		// int[] = (a-b-c-d), int = array size
-		std::string decrypt(int[], int, bool=1); // deprecated
+		std::string decrypt(Integer[], Integer, bool=1); // deprecated
 		std::string decrypt(std::string, bool=1);
 		
 		void show_pars();
@@ -34,9 +34,9 @@ class RSA {
 		std::string get_pbc_key();
 		std::string get_prv_key();
 		
-		void set_d(Long);
-		void set_n(Long);
-		void set_e(int);
+		void set_d(Integer);
+		void set_n(Integer);
+		void set_e(Integer);
 		
 		// encrypt with public key and decrypt with private key => encrypt(string, int, bool=1), decrypt(int[], int, bool=1);
 		// encrypt with private key and decrypt with public key => encrypt(string, int, bool=0), decrypt(int[], int, bool=0);
@@ -55,13 +55,13 @@ RSA::RSA(bool gen){
 		return;
 	}
 	
-	this->p = MATH::generate_prime(5,100);
+	this->p = MATH::generate_prime(1000,10000);
 	
-	int temp_q = 0;
+	Integer temp_q = 0;
 	
 	do {
 		
-		temp_q = MATH::generate_prime(5,100);
+		temp_q = MATH::generate_prime(1000,10000);
 		
 		if (temp_q == p) continue; else break;
 		
@@ -76,38 +76,38 @@ RSA::RSA(bool gen){
 	this->d = gen_d();
 }
 
-void RSA::set_d(Long d){
+void RSA::set_d(Integer d){
 	if (d > 0)
 		this->d = d;
 }
 
-void RSA::set_n(Long n){
+void RSA::set_n(Integer n){
 	if (n > 0)
 		this->n = n;
 }
 
-void RSA::set_e(int e){
+void RSA::set_e(Integer e){
 	if (e > 0)
 		this->e = e;
 }
 
 std::string RSA::encrypt(std::string plain, bool pbc_key){
 		
-	int array_msg_plain[plain.length()];
+	Integer array_msg_plain[plain.length()];
 	
-	for (int i=0; i<plain.length(); i++)
+	for (Integer i=0; i<plain.length(); i++)
 		array_msg_plain[i] = (int)plain[i];
 	
-	int enc[plain.length()];
+	Integer enc[plain.length()];
 	
-	auto encryption_key = pbc_key ? this->e : this->d;
+	Integer encryption_key = pbc_key ? this->e : this->d;
 	
-	for (int i=0; i<plain.length(); i++)
+	for (Integer i=0; i<plain.length(); i++)
 		enc[i] = MATH::modularExp(array_msg_plain[i], encryption_key, this->n);
 		
 	std::string str_enc = "";
 		
-	for (int i=0; i<plain.length(); i++)
+	for (Integer i=0; i<plain.length(); i++)
 	{
 		std::ostringstream temp;
     	temp << enc[i];
@@ -119,15 +119,15 @@ std::string RSA::encrypt(std::string plain, bool pbc_key){
 }
 
 // input int array required (example) => 8000-8001-8002
-std::string RSA::decrypt(int crypted[], int size, bool prv_key){
+std::string RSA::decrypt(Integer crypted[], Integer size, bool prv_key){
 	
-	int decrypted_message[size];
+	Integer decrypted_message[size];
 	
 	std::string decrypted = "";
 	
-	auto decryption_key = prv_key ? d : e;
+	Integer decryption_key = prv_key ? d : e;
 	
-	for (int i=0; i<size; i++)
+	for (Integer i=0; i<size; i++)
 	{
 		decrypted_message[i] = MATH::modularExp(crypted[i], decryption_key, n);
 		decrypted += (char)decrypted_message[i];
@@ -143,13 +143,13 @@ std::string RSA::decrypt(std::string crypted, bool prv_key){
 	
 	std::vector<std::string> str_array = split(decoded_str);
 	
-	int int_array[str_array.size()];
+	Integer int_array[str_array.size()];
 	
 	std::string plain = "";
 	
-	auto decryption_key = prv_key ? d : e;
+	Integer decryption_key = prv_key ? d : e;
 	
-	for (int i=0; i<str_array.size(); i++)
+	for (Integer i=0; i<str_array.size(); i++)
 	{
 		int_array[i] = std::stoi(str_array[i]);
 		plain += (char)MATH::modularExp(int_array[i], decryption_key, n);
@@ -172,23 +172,23 @@ void RSA::show_pars(){
 	std::cout << "\n\n";
 }
 
-Long RSA::gen_d(Long max) {
+Integer RSA::gen_d(Integer max) {
 	
-	for (int d=0; d<max; d++) 
+	for (Integer d=0; d<max; d++) 
 		if ((d * e) % b == 1) 
 			return d;
 	return -1;
 }
 
-int RSA::gen_e(int max) {
+Integer RSA::gen_e(Integer max) {
 	
-	int e = 2;
+	Integer e = rand() % (999666333-999666) + (999666);;
 	
-	while (e < max) 
+	while (e) 
 		if (MATH::MCD(e, b) == 1) 
 			return e; 
 		else 
-			e++;
+			e--;
 	
 	return -1;
 }
